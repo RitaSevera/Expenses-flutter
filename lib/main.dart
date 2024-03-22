@@ -15,6 +15,8 @@ class ExpensesApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]); Serve para a app apenas ficar numa posição
+
     return MaterialApp(
       home: const MyHomePage(),
       theme: theme.copyWith(
@@ -48,6 +50,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _transaction = [];
+  bool _showChart = false;
 
   @override
   void initState() {
@@ -118,24 +121,62 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+    bool isLandscape = mediaQuery.orientation == Orientation.landscape;
+    final appBar = AppBar(
+      backgroundColor: const Color.fromARGB(255, 197, 153, 205),
+      centerTitle: true,
+      title: const Text("Personal Expenses"),
+      actions: [
+        IconButton(
+            onPressed: () => _openTransactionFormModal(context),
+            icon: const Icon(Icons.add)),
+        IconButton(
+            onPressed: () {
+              setState(() {
+                _showChart = !_showChart;
+              });
+            },
+            icon: Icon(_showChart ? Icons.list : Icons.show_chart))
+      ],
+    );
+
+    final availableHeight = mediaQuery.size.height -
+        appBar.preferredSize.height -
+        mediaQuery.padding.top;
+
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 197, 153, 205),
-        centerTitle: true,
-        title: const Text("Personal Expenses"),
-        actions: [
-          IconButton(
-              onPressed: () => _openTransactionFormModal(context),
-              icon: const Icon(Icons.add))
-        ],
-      ),
+      appBar: appBar,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Chart(_recentTransactions),
-            TransactionList(_transaction,
-                _deleteTransaction), //comunicação direta - passo já os dados
+            // if (isLandscape)
+            //   Row(
+            //     mainAxisAlignment: MainAxisAlignment.center,
+            //     children: [
+            //       const Text("Graphic"),
+            //       Switch(
+            //           value: _showChart,
+            //           onChanged: (value) {
+            //             setState(() {
+            //               _showChart = value;
+            //             });
+            //           }),
+            //     ],
+            //   ),
+            if (_showChart || !isLandscape)
+              SizedBox(
+                height: availableHeight * (isLandscape ? 0.6 : 0.25),
+                child: Chart(
+                  _recentTransactions,
+                ),
+              ),
+            if (!_showChart || !isLandscape)
+              SizedBox(
+                height: availableHeight * 0.75,
+                child: TransactionList(_transaction, _deleteTransaction),
+              ), //comunicação direta - passo já os dados
           ],
         ),
       ),

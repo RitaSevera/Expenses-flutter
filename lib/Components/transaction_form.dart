@@ -44,60 +44,67 @@ class _TransactionFormState extends State<TransactionForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 5,
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          children: [
-            TextField(
-              controller: _titleController,
-              onSubmitted: (_) => _submitForm(),
-              decoration: const InputDecoration(
-                labelStyle: TextStyle(fontFamily: "Lora"),
-                labelText: "Title",
-              ),
-            ),
-            TextField(
-              controller: _valueController,
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-              onSubmitted: (_) => _submitForm(),
-              decoration: const InputDecoration(
+    return SingleChildScrollView(
+      child: Card(
+        elevation: 5,
+        child: Padding(
+          padding: EdgeInsets.only(
+            top: 10,
+            right: 10,
+            left: 10,
+            bottom: 10 + MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: Column(
+            children: [
+              TextField(
+                controller: _titleController,
+                onSubmitted: (_) => _submitForm(),
+                decoration: const InputDecoration(
                   labelStyle: TextStyle(fontFamily: "Lora"),
-                  labelText: "Value €"),
-            ),
-            SizedBox(
-              height: 70,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      DateFormat("dd/MM/y").format(_selectedDate!),
-                      style: const TextStyle(fontFamily: "Lora"),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: _showDate,
-                    child: const Text(
-                      "Select a date",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontFamily: "Lora"),
-                    ),
-                  ),
-                ],
+                  labelText: "Title",
+                ),
               ),
-            ),
-            OutlinedButton(
-              onPressed: _submitForm,
-              child: const Text(
-                "New transaction",
-                style: TextStyle(
-                    color: Color.fromARGB(255, 180, 122, 165),
-                    fontFamily: "Lora-bold"),
+              TextField(
+                controller: _valueController,
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
+                onSubmitted: (_) => _submitForm(),
+                decoration: const InputDecoration(
+                    labelStyle: TextStyle(fontFamily: "Lora"),
+                    labelText: "Value €"),
               ),
-            ),
-          ],
+              SizedBox(
+                height: 70,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        DateFormat("dd/MM/y").format(_selectedDate!),
+                        style: const TextStyle(fontFamily: "Lora"),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: _showDate,
+                      child: const Text(
+                        "Select a date",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontFamily: "Lora"),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              OutlinedButton(
+                onPressed: _submitForm,
+                child: const Text(
+                  "New transaction",
+                  style: TextStyle(
+                      color: Color.fromARGB(255, 180, 122, 165),
+                      fontFamily: "Lora-bold"),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
